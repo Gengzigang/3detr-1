@@ -144,6 +144,7 @@ class SunrgbdDetectionDataset(Dataset):
         dataset_config,
         split_set="train",
         root_dir=None,
+        meta_data_dir=None,
         num_points=20000,
         use_color=False,
         use_height=False,
