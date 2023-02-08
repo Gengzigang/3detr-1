@@ -20,6 +20,7 @@ def build_dataset(args):
             root_dir=args.dataset_root_dir, 
             meta_data_dir=args.meta_data_dir, 
             use_color=args.use_color,
+            filt_empty=args.filt_empty,
             augment=True
         ),
         "test": dataset_builder(
@@ -27,6 +28,7 @@ def build_dataset(args):
             split_set="val", 
             root_dir=args.dataset_root_dir, 
             use_color=args.use_color,
+            filt_empty=args.filt_empty,
             augment=False
         ),
     }

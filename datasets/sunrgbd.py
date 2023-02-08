@@ -152,6 +152,7 @@ class SunrgbdDetectionDataset(Dataset):
         augment=False,
         use_random_cuboid=True,
         random_cuboid_min_points=30000,
+        filt_empty=False,
     ):
         assert num_points <= 50000
         assert split_set in ["train", "val", "trainval"]
@@ -199,7 +200,26 @@ class SunrgbdDetectionDataset(Dataset):
             np.ones((1, 3), dtype=np.float32),
         ]
         self.max_num_obj = 64
-
+        
+        if filt_empty:
+            print(split_set, len(self.scan_names), "scans before filter")
+            empty_box_scannames = None
+            if empty_box_scannames is None:
+                empty_box_scannames = self.filter()
+            for scan in empty_box_scannames:
+                if scan in self.scan_names:
+                    self.scan_names.remove(scan)
+            print(split_set, len(self.scan_names),"scans after filter")
+            
+    def filter(self):
+        empty_box_scannames = []
+        for scan_name in self.scan_names:
+            instance_bboxes = np.load(os.path.join(self.data_path, scan_name) + "_bbox.npy")
+            if instance_bboxes.shape[0]==0:
+                # print("scan_name",scan_name,instance_bboxes.shape[0])
+                empty_box_scannames.append(scan_name)
+        return empty_box_scannames
+    
     def __len__(self):
         return len(self.scan_names)
 
